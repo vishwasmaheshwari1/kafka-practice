@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  kafka-cluster:
+    image: lensesio/fast-data-dev:3.9.0
+    container_name: fast-data-dev
+    # REMOVED hostname: localhost to prevent loopback confusion
+    environment:
+      # 1. Standard loopback format for single-container architectures
+      ADV_HOST: 127.0.0.1      
+
+      # 2. Maps clean endpoints directly out to your host web browser
+      REGISTRY_URL: "http://localhost:8081"
+      PROXY_URL: "http://localhost:8082"
+      CONNECT_URL: "http://localhost:8083"
+      
+      RUNTESTS: 0                 
+      FORWARDLOGS: 0              
+      SAMPLEDATA: 0               
+      DISABLE: debezium-mongodb,debezium-mysql,debezium-postgres,debezium-sqlserver,debezium-jdbc
+    ports:
+      - "3030:3030"
+      - "8081:8081"
+      - "8083:8083"
+      - "9581-9585:9581-9585"
+      - "9092:9092"
+    restart: unless-stopped
+
+
+
+# WORK AROUND: used below command to run rest proxy as configuration was failing and not allowing to connect to kafka-cluster
+
+# docker run -d --name rest-proxy   --network host   -e KAFKA_REST_HOST_NAME=localhost  -e KAFKA_REST_LISTENERS="http://localhost:8082"   -e KAFKA_REST_BOOTSTRAP_SERVERS="PLAINTEXT://127.0.0.1:9092"   -e KAFKA_REST_SCHEMA_REGISTRY_URL="http://127.0.0.1:8081"   confluentinc/cp-kafka-rest:7.7.0
+
+
+
+    # networks:
+    #   - kafka-net
+
+  # kafka-rest-proxy:
+  #   image: confluentinc/cp-kafka-rest:7.7.0
+  #   container_name: rest-proxy
+  #   ports:
+  #     - "8082:8082"   # Maps REST Proxy to host machine
+  #   environment:
+  #     KAFKA_REST_HOST_NAME: kafka-rest-proxy
+  #     KAFKA_REST_LISTENERS: 'http://0.0.0'
+  #     # FIX 1: Direct backend container traffic to internal port 9092 using the network service name
+  #     KAFKA_REST_BOOTSTRAP_SERVERS: 'fast-data-dev:9092'
+  #     # FIX 2: Connect directly to the internal Schema Registry service name
+  #     KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://fast-data-dev:8081'
+  #   depends_on:
+  #     - kafka-cluster
+  #   networks:
+  #     - kafka-net
+
+# networks:
+#   kafka-net:
+#     driver: bridge
+
+
+# services:
+#   # this is our kafka cluster.
+#   kafka-cluster:
+#     # image: landoop/fast-data-dev:cp3.3.0
+#     # image: landoop/fast-data-dev
+#     image: lensesio/fast-data-dev:3.9.0
+#     environment:
+#       ADV_HOST: 127.0.0.1         # Change to 192.168.99.100 if using Docker Toolbox
+#       RUNTESTS: 0                 # Disable Running tests so the cluster starts faster
+#       FORWARDLOGS: 0              # Disable running 5 file source connectors that bring application logs into Kafka topics
+#       SAMPLEDATA: 0               # Do not create sea_vessel_position_reports, nyc_yellow_taxi_trip_data, reddit_posts topics with sample Avro records.
+#       # The next three variables are required if you want to have Kafka
+#       # available at the host for local development. They are tailored to KRaft
+#       # fast-data-dev (3.9.x or later). The broker will be available at localhost:9092.
+#       KAFKA_LISTENERS: PLAINTEXT://:9092,DOCKERCOMPOSE://:19092,CONTROLLER://:16062
+#       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,DOCKERCOMPOSE://demo-kafka:19092
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: >
+#         DOCKERCOMPOSE:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,
+#         SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+#       # Makes things a little lighter
+#       DISABLE: debezium-mongodb,debezium-mysql,debezium-postgres,debezium-sqlserver,debezium-jdbc
+#     # These are the ports for Kafka and Schema Registry. You can disable them if
+#     # you don't need to access Kafka from your host.
+#     ports:
+#       # - 2181:2181                 # Zookeeper
+#       - 3030:3030                 # Landoop UI
+#       - 8081-8083:8081-8083       # REST Proxy, Schema Registry, Kafka Connect ports
+#       - 9581-9585:9581-9585       # JMX Ports
+#       - 9092:9092                 # Kafka Broker

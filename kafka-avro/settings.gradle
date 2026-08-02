@@ -1,0 +1,4 @@
+rootProject.name = 'kafka-avro'
+include 'avro-practice'
+include 'kafka-avro-1'
+include 'kafka-avro-2'

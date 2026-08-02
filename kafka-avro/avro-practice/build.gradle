@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'com.github.davidmc24.gradle.plugin.avro' version '1.5.0' // Replaces avro-maven-plugin
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    avroVersion = '1.11.1'
+}
+
+dependencies {
+//    testImplementation platform('org.junit:junit-bom:5.10.0')
+//    testImplementation 'org.junit.jupiter:junit-jupiter'
+//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation "org.apache.avro:avro:${avroVersion}"
+
+}
+
+// 1. Point the plugin to your custom Maven schema directory path
+generateAvroJava {
+    source("src/main/resources/avro")
+}
+
+// Configures the Avro code generation to match your exact Maven plugin settings
+avro {
+    stringType = "String"
+    fieldVisibility = "PRIVATE"
+    createSetters = false
+    enableDecimalLogicalType = true
+}
+
+// Automatically includes generated Avro files in your main source set
+sourceSets {
+    main {
+        java {
+//            srcDir "${buildDir}/generated-sources/avro"
+//            // Tells the compiler: "Look here too!"
+//            srcDir layout.buildDirectory.dir("generated-main-avro-java")
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

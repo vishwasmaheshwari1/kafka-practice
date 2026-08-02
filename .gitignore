@@ -1,6 +1,11 @@
 # Large/local-only assets (explicitly excluded)
+/code.zip
 /commands.txt
 /images
+/Insomnia.Core-13.1.0.deb
+/kafka-avro-course
+/kafka-schema-registry.pdf
+/kafka-schema-registry.pptx
 /kafka_2.13-4.0.0
 /kafka_2.13-4.0.0.tgz
 /kafka-beginners.pdf
@@ -8,6 +13,11 @@
 /kafka-beginners-course
 /kafka-for-beginners-code-20250813.zip
 /kafka-stack-docker-compose
+/__MACOSX
+/kafka-avro/index.html
+
+# Generated data files
+*.avro
 
 # Build & Compilation
 *.class

@@ -34,3 +34,24 @@ https://kafka.apache.org/43/configuration/broker-configs/
 https://www.conduktor.io/kafka/kafka-topic-configuration-log-compaction
 
 
+Schema Registry:
+https://docs.confluent.io/platform/current/schema-registry/index.html
+
+AVRO:
+https://avro.apache.org/docs/
+https://docs.oracle.com/cd/E57769_01/html/GettingStartedGuide/avroschemas.html
+https://github.com/Axual/rabo-alerts-blog-post/tree/master/src/main/avro
+https://github.com/gwenshap/kafka-examples
+
+Kafka Rest Proxy:
+https://docs.confluent.io/platform/current/connect/index.html
+https://insomnia.rest/
+https://docs.confluent.io/platform/current/kafka-rest/index.html
+https://en.wikipedia.org/wiki/Base64
+https://docs.confluent.io/platform/current/kafka-rest/production-deployment/rest-proxy/config.html
+
+
+kafka project:
+https://medium.com/@stephane.maarek/how-to-use-apache-kafka-to-transform-a-batch-pipeline-into-a-real-time-one-831b48a6ad85
+https://github.com/simplesteph/medium-blog-kafka-udemy
+
